@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct PDF Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .button:hover {
+            background: #0056b3;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .download-section a {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        .download-section a:hover {
+            background: #218838;
+        }
+        
+        .hidden-pages {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: 140mm;
+            height: 198mm;
+        }
+        
+        .pdf-page {
+            width: 140mm;
+            height: 198mm;
+            background: url('Background + Logo 2.png') no-repeat center center;
+            background-size: cover;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            font-size: 12pt;
+            color: #000;
+            overflow: hidden;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Direct PDF Generator</h1>
+        <p>This generator creates a PDF by directly loading and styling each page with your custom background.</p>
+        
+        <button id="generateBtn" class="button" onclick="generatePDF()">Generate PDF</button>
+        
+        <div id="status" class="status"></div>
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+        
+        <div id="downloadSection" class="download-section" style="display: none;">
+            <a href="#" id="downloadLink" download="OZ-Presentation.pdf">Download PDF</a>
+        </div>
+    </div>
+
+    <div class="hidden-pages" id="hiddenPages"></div>
+
+    <script>
+        const pages = [
+            'page-01-cover.html',
+            'page-02-toc.html',
+            'page-03-executive.html',
+            'page-04-what-are-oz.html',
+            'page-05-tax-advantage.html',
+            'page-06-compliance.html',
+            'page-07-investment-structures.html',
+            'page-08-real-estate.html',
+            'page-09-phoenix-market.html',
+            'page-10-hazen-road.html',
+            'page-11-risk-management.html',
+            'page-12-exit-strategy.html',
+            'page-13-legal-regulatory.html',
+            'page-14-eligibility.html',
+            'page-15-reporting.html',
+            'page-16-community-impact.html'
+        ];
+
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadSection = document.getElementById('downloadSection');
+            const generateBtn = document.getElementById('generateBtn');
+            const hiddenPages = document.getElementById('hiddenPages');
+            
+            // Disable button and show status
+            generateBtn.disabled = true;
+            status.style.display = 'block';
+            status.className = 'status info';
+            status.textContent = 'Starting PDF generation...';
+            
+            try {
+                // Load all page contents first
+                const pageContents = [];
+                for (let i = 0; i < pages.length; i++) {
+                    status.textContent = `Loading page ${i + 1} of ${pages.length}: ${pages[i]}`;
+                    progressBar.style.width = `${(i / pages.length) * 50}%`;
+                    
+                    try {
+                        const response = await fetch(pages[i]);
+                        if (!response.ok) {
+                            throw new Error(`Failed to load ${pages[i]}: ${response.status}`);
+                        }
+                        const pageHtml = await response.text();
+                        pageContents.push(pageHtml);
+                    } catch (error) {
+                        console.error(`Error loading ${pages[i]}:`, error);
+                        // Create a fallback page
+                        pageContents.push(`
+                            <div class="content-page">
+                                <h2>Page ${i + 1}</h2>
+                                <p>Content for ${pages[i]}</p>
+                            </div>
+                        `);
+                    }
+                }
+                
+                // Generate PDF pages
+                for (let i = 0; i < pageContents.length; i++) {
+                    status.textContent = `Generating PDF page ${i + 1} of ${pages.length}`;
+                    progressBar.style.width = `${50 + (i / pages.length) * 50}%`;
+                    
+                    // Create page element with your custom background
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'pdf-page';
+                    
+                    // Parse the page HTML and extract content
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = pageContents[i];
+                    
+                    // Extract the main content
+                    const contentDiv = tempDiv.querySelector('.content-page, .toc, .cover, .executive, .what-are-oz, .tax-advantage, .compliance, .investment-structures, .real-estate, .phoenix-market, .hazen-road, .risk-management, .exit-strategy, .legal-regulatory, .eligibility, .reporting, .community-impact');
+                    
+                    if (contentDiv) {
+                        pageDiv.appendChild(contentDiv.cloneNode(true));
+                    } else {
+                        // Fallback: use the body content
+                        const bodyContent = tempDiv.querySelector('body');
+                        if (bodyContent) {
+                            pageDiv.appendChild(bodyContent.cloneNode(true));
+                        } else {
+                            // Last resort: use the entire content
+                            pageDiv.innerHTML = pageContents[i];
+                        }
+                    }
+                    
+                    // Add footer with logo (except for cover page)
+                    if (i > 0) {
+                        const footer = document.createElement('div');
+                        footer.style.position = 'absolute';
+                        footer.style.bottom = '15px';
+                        footer.style.left = '15px';
+                        footer.style.right = '15px';
+                        footer.style.display = 'flex';
+                        footer.style.alignItems = 'center';
+                        footer.style.justifyContent = 'center';
+                        footer.style.height = '30px';
+                        
+                        const logoImg = document.createElement('img');
+                        logoImg.src = 'logo.png';
+                        logoImg.style.maxHeight = '30px';
+                        logoImg.style.width = 'auto';
+                        footer.appendChild(logoImg);
+                        
+                        pageDiv.appendChild(footer);
+                    }
+                    
+                    hiddenPages.appendChild(pageDiv);
+                    
+                    // Wait for rendering
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Capture page
+                    const canvas = await html2canvas(pageDiv, {
+                        width: 529, // 140mm in pixels at 96 DPI
+                        height: 747, // 198mm in pixels at 96 DPI
+                        scale: 4, // Maximum quality scaling
+                        useCORS: true,
+                        allowTaint: true,
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        scrollX: 0,
+                        scrollY: 0,
+                        windowWidth: window.innerWidth,
+                        windowHeight: window.innerHeight,
+                        foreignObjectRendering: true
+                    });
+                    
+                    // Add to PDF
+                    if (i > 0) {
+                        pdf.addPage();
+                    }
+                    
+                    const imgData = canvas.toDataURL('image/png', 1.0); // No compression
+                    pdf.addImage(imgData, 'PNG', 0, 0, 210, 297, '', 'FAST');
+                    
+                    // Clean up
+                    hiddenPages.removeChild(pageDiv);
+                }
+                
+                // Complete
+                status.className = 'status success';
+                status.textContent = 'PDF generation completed successfully!';
+                progressBar.style.width = '100%';
+                
+                // Create download link
+                const pdfBlob = pdf.output('blob');
+                const url = URL.createObjectURL(pdfBlob);
+                downloadLink.href = url;
+                downloadSection.style.display = 'block';
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                status.className = 'status error';
+                status.textContent = `Error generating PDF: ${error.message}`;
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

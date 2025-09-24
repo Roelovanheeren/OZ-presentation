@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PDF Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .test-page {
+            width: 140mm;
+            height: 198mm;
+            background: url('Background + Logo 2.png') no-repeat center center;
+            background-size: cover;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            font-size: 12pt;
+            color: #000;
+            overflow: hidden;
+            position: relative;
+            margin: 20px auto;
+        }
+        
+        .test-content {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test PDF Generator</h1>
+        <p>This will test if the PDF generation works with a simple test page.</p>
+        
+        <button class="button" onclick="testPDF()">Test PDF Generation</button>
+        
+        <div id="status" class="status"></div>
+        
+        <div id="downloadSection" style="display: none; text-align: center; margin-top: 20px;">
+            <a href="#" id="downloadLink" download="test.pdf" style="display: inline-block; padding: 15px 30px; background: #28a745; color: white; text-decoration: none; border-radius: 5px;">Download Test PDF</a>
+        </div>
+    </div>
+
+    <div class="test-page" id="testPage">
+        <div class="test-content">
+            <h2>Test Page</h2>
+            <p>This is a test page to verify PDF generation works.</p>
+            <p>If you can see this content and the background image, the PDF generation should work.</p>
+            <ul>
+                <li>Background image should be visible</li>
+                <li>Text should be readable</li>
+                <li>Layout should be preserved</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        async function testPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const status = document.getElementById('status');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadSection = document.getElementById('downloadSection');
+            
+            status.style.display = 'block';
+            status.className = 'status info';
+            status.textContent = 'Testing PDF generation...';
+            
+            try {
+                const testPage = document.getElementById('testPage');
+                
+                // Wait for background image to load
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Capture the test page
+                const canvas = await html2canvas(testPage, {
+                    width: 529, // 140mm in pixels at 96 DPI
+                    height: 747, // 198mm in pixels at 96 DPI
+                    scale: 2, // Good quality
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    logging: true
+                });
+                
+                // Add to PDF
+                const imgData = canvas.toDataURL('image/png', 1.0);
+                pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+                
+                // Complete
+                status.className = 'status success';
+                status.textContent = 'Test PDF generated successfully!';
+                
+                // Create download link
+                const pdfBlob = pdf.output('blob');
+                const url = URL.createObjectURL(pdfBlob);
+                downloadLink.href = url;
+                downloadSection.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Test PDF generation error:', error);
+                status.className = 'status error';
+                status.textContent = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
