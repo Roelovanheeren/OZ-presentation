@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF Combiner - OZ Investment Guide</title>
+    <title>Advanced PDF Generator - OZ Investment Guide</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -88,14 +89,84 @@
             width: 0%;
             transition: width 0.3s ease;
         }
+
+        /* PDF Page Styling - Exact match to presentation */
+        .pdf-page {
+            width: 210mm;
+            height: 297mm;
+            background: url('Background + Logo 2.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Inter', sans-serif;
+            page-break-after: always;
+            margin-bottom: 10mm;
+        }
+        
+        .pdf-page-content {
+            width: 100%;
+            height: 100%;
+            padding: 25px 20px 60px 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        .pdf-page-content h2 {
+            font-size: 24pt;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 15px;
+            border-left: 4px solid #000;
+            padding-left: 20px;
+        }
+        
+        .pdf-page-content h3 {
+            font-size: 16pt;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-page-content p {
+            font-size: 11pt;
+            font-family: 'Inter', sans-serif;
+            color: #000;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .pdf-page-footer {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+        }
+        
+        .pdf-page-footer img {
+            max-height: 30px;
+            width: auto;
+        }
+
+        .hidden-pages {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>PDF Combiner - OZ Investment Guide</h1>
-        <p>This tool will combine all 22 pages of the Opportunity Zone Investment Guide into a single PDF document.</p>
+        <h1>Advanced PDF Generator - OZ Investment Guide</h1>
+        <p>This tool will generate a high-quality PDF with exact formatting matching the online presentation.</p>
         
-        <button class="button" onclick="generatePDF()">Generate Complete PDF</button>
+        <button class="button" onclick="generateAdvancedPDF()">Generate High-Quality PDF</button>
         
         <div class="progress">
             <div class="progress-bar" id="progressBar"></div>
@@ -107,6 +178,8 @@
             <a href="#" id="downloadBtn" class="button" download="OZ-Investment-Guide.pdf">Download PDF</a>
         </div>
     </div>
+
+    <div class="hidden-pages" id="hiddenPages"></div>
 
     <script>
         const pages = [
@@ -140,122 +213,97 @@
             'page-22-conclusion.html'
         ];
 
-        async function generatePDF() {
+        async function generateAdvancedPDF() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const status = document.getElementById('status');
             const progressBar = document.getElementById('progressBar');
             const downloadLink = document.getElementById('downloadLink');
             const downloadBtn = document.getElementById('downloadBtn');
+            const hiddenPages = document.getElementById('hiddenPages');
             
             status.style.display = 'block';
             status.className = 'status info';
-            status.textContent = 'Starting PDF generation...';
+            status.textContent = 'Starting advanced PDF generation...';
             
             try {
+                // Load all page contents first
+                const pageContents = [];
                 for (let i = 0; i < pages.length; i++) {
-                    status.textContent = `Processing page ${i + 1} of ${pages.length}: ${pages[i]}`;
-                    progressBar.style.width = `${((i + 1) / pages.length) * 100}%`;
+                    status.textContent = `Loading page ${i + 1} of ${pages.length}: ${pages[i]}`;
+                    progressBar.style.width = `${(i / pages.length) * 50}%`;
                     
-                    // Create a container div with exact same styling as the presentation
-                    const pageContainer = document.createElement('div');
-                    pageContainer.style.position = 'absolute';
-                    pageContainer.style.left = '-9999px';
-                    pageContainer.style.top = '0';
-                    pageContainer.style.width = '140mm';
-                    pageContainer.style.height = '198mm';
-                    pageContainer.style.background = 'url("Background + Logo 2.png") no-repeat center center';
-                    pageContainer.style.backgroundSize = 'cover';
-                    pageContainer.style.borderRadius = '8px';
-                    pageContainer.style.overflow = 'hidden';
-                    pageContainer.style.position = 'relative';
-                    pageContainer.style.fontFamily = "'Inter', sans-serif";
-                    
-                    // Load page content
                     const response = await fetch(pages[i]);
                     const pageHtml = await response.text();
+                    pageContents.push(pageHtml);
+                }
+                
+                // Generate PDF pages
+                for (let i = 0; i < pageContents.length; i++) {
+                    status.textContent = `Generating PDF page ${i + 1} of ${pages.length}`;
+                    progressBar.style.width = `${50 + (i / pages.length) * 50}%`;
                     
-                    // Extract the content from the HTML (everything inside the content div)
+                    // Create page element
+                    const pageDiv = document.createElement('div');
+                    pageDiv.className = 'pdf-page';
+                    
+                    // Extract content from page HTML
                     const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = pageHtml;
+                    tempDiv.innerHTML = pageContents[i];
                     const contentPage = tempDiv.querySelector('.content-page');
                     
                     if (contentPage) {
-                        // Create page content container with proper styling
-                        const pageContent = document.createElement('div');
-                        pageContent.style.width = '100%';
-                        pageContent.style.height = '100%';
-                        pageContent.style.padding = '25px 20px 60px 20px';
-                        pageContent.style.boxSizing = 'border-box';
-                        pageContent.style.position = 'relative';
-                        pageContent.style.overflow = 'hidden';
+                        const pageContentDiv = document.createElement('div');
+                        pageContentDiv.className = 'pdf-page-content';
+                        pageContentDiv.innerHTML = contentPage.innerHTML;
+                        pageDiv.appendChild(pageContentDiv);
                         
-                        // Copy the content
-                        pageContent.innerHTML = contentPage.innerHTML;
-                        pageContainer.appendChild(pageContent);
-                        
-                        // Add footer with logo
+                        // Add footer
                         const footer = document.createElement('div');
-                        footer.style.position = 'absolute';
-                        footer.style.bottom = '15px';
-                        footer.style.left = '15px';
-                        footer.style.right = '15px';
-                        footer.style.display = 'flex';
-                        footer.style.alignItems = 'center';
-                        footer.style.justifyContent = 'center';
-                        footer.style.height = '30px';
-                        
+                        footer.className = 'pdf-page-footer';
                         const logoImg = document.createElement('img');
                         logoImg.src = 'logo.png';
-                        logoImg.style.maxHeight = '30px';
-                        logoImg.style.width = 'auto';
                         footer.appendChild(logoImg);
-                        
-                        pageContainer.appendChild(footer);
+                        pageDiv.appendChild(footer);
                     }
                     
-                    document.body.appendChild(pageContainer);
+                    hiddenPages.appendChild(pageDiv);
                     
-                    // Wait for images and fonts to load
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    // Wait for rendering
+                    await new Promise(resolve => setTimeout(resolve, 500));
                     
-                    // Capture with html2canvas using exact dimensions
-                    const canvas = await html2canvas(pageContainer, {
-                        width: 529, // 140mm in pixels at 96 DPI
-                        height: 747, // 198mm in pixels at 96 DPI
-                        scale: 2, // Higher resolution
+                    // Capture page
+                    const canvas = await html2canvas(pageDiv, {
+                        width: 794, // A4 width at 96 DPI
+                        height: 1123, // A4 height at 96 DPI
+                        scale: 2,
                         useCORS: true,
                         allowTaint: true,
                         backgroundColor: '#ffffff'
                     });
                     
-                    // Add page to PDF (except for the first page)
+                    // Add to PDF
                     if (i > 0) {
                         pdf.addPage();
                     }
                     
-                    // Calculate dimensions to maintain aspect ratio
-                    const imgWidth = 210; // A4 width in mm
-                    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-                    
-                    // Add the canvas image to the PDF
                     const imgData = canvas.toDataURL('image/png');
-                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
                     
-                    // Remove the temporary container
-                    document.body.removeChild(pageContainer);
+                    // Clean up
+                    hiddenPages.removeChild(pageDiv);
                 }
                 
-                // Generate the PDF blob
+                // Generate PDF
                 const pdfBlob = pdf.output('blob');
                 const url = URL.createObjectURL(pdfBlob);
                 
-                // Show download link
                 downloadBtn.href = url;
                 downloadLink.style.display = 'block';
                 
                 status.className = 'status success';
-                status.textContent = 'PDF generated successfully! Click the download button to save.';
+                status.textContent = 'High-quality PDF generated successfully!';
+                progressBar.style.width = '100%';
                 
             } catch (error) {
                 status.className = 'status error';
