@@ -6,58 +6,98 @@
     
     .content-page h2 {
         font-family: 'Playfair Display', serif;
-        font-size: 24pt;
+        font-size: 28pt;
         font-weight: 700;
         color: #000;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         border-left: 4px solid #000;
         padding-left: 20px;
     }
     
     .content-page h3 {
         font-family: 'Playfair Display', serif;
-        font-size: 16pt;
+        font-size: 18pt;
         font-weight: 600;
         color: #000;
-        margin: 15px 0 8px 0;
+        margin: 20px 0 10px 0;
     }
     
     .content-page p {
         font-family: 'Inter', sans-serif;
-        font-size: 11pt;
-        line-height: 1.4;
+        font-size: 13pt;
+        line-height: 1.6;
         color: #000;
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
     
+    .asset-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin: 20px 0;
+    }
+    
+    .asset-column {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #000;
+    }
+    
+    .asset-column h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 16pt;
+        font-weight: 700;
+        color: #000;
+        margin: 0 0 15px 0;
+    }
+
+    
     @media (max-width: 768px) {
+        .asset-grid {
+            grid-template-columns: 1fr;
+        }
+        
         .content-page h2 {
-            font-size: 20pt;
+            font-size: 24pt;
         }
         
         .content-page h3 {
-            font-size: 14pt;
+            font-size: 16pt;
         }
         
         .content-page p {
-            font-size: 10pt;
+            font-size: 12pt;
         }
     }
 </style>
 
 <div class="content-page">
-    <h2>5. Investment Structures & Costs</h2>
+    <h2>6. Asset Classes & Investment Types</h2>
     
-    <h3>Qualified Opportunity Fund Structures</h3>
-    <p>QOFs can be structured as partnerships, corporations, or LLCs, each offering different advantages for tax treatment, management flexibility, and investor liquidity.</p>
+    <h3>Investment Universe Overview</h3>
+    <p>Opportunity Zone investments span diverse asset classes and investment strategies, each with distinct risk-return profiles, compliance requirements, and operational considerations. The optimal asset class selection depends on investor objectives, risk tolerance, and market conditions.</p>
     
-    <h3>Institutional vs. Self-Managed</h3>
-    <p>Institutional QOFs provide professional management and diversification, while self-managed QOFs offer greater control and potentially lower fees for sophisticated investors.</p>
+    <div class="asset-grid">
+        <div class="asset-column">
+            <h3>Real Estate Development</h3>
+            <p><strong>Ground-Up Construction:</strong> Maximum compliance flexibility with original use property status.</p>
+            <p><strong>Risk Profile:</strong> Higher development and execution risk offset by superior tax benefits and return potential.</p>
+            <p><strong>Timeline:</strong> 24-48 month development cycles aligned with OZ holding period requirements.</p>
+        </div>
+        
+        <div class="asset-column">
+            <h3>Real Estate Acquisition</h3>
+            <p><strong>Value-Add Repositioning:</strong> Existing properties requiring substantial improvement investment.</p>
+            <p><strong>Compliance:</strong> Must satisfy substantial improvement test with investment equal to acquisition cost.</p>
+            <p><strong>Strategy:</strong> Repositioning, renovation, and modernization of income-producing assets.</p>
+        </div>
+    </div>
+
     
-    <h3>Fee Structures</h3>
-    <p>Typical fee structures include management fees (1-2% annually), performance fees (10-20% of profits), and acquisition fees (1-3% of invested capital).</p>
+    <h3>Operating Business Investments</h3>
+    <p>Qualified Opportunity Zone Businesses (QOZBs) provide access to operating company investments with potential for exceptional growth and job creation. These investments require sophisticated due diligence and active management but offer diversification beyond real estate.</p>
     
-    <h3>Minimum Investment Requirements</h3>
-    <p>Minimum investments typically range from $25,000 to $1,000,000, depending on the fund structure and target investor base.</p>
-    
+    <h3>Asset Class Optimization</h3>
+    <p>Leading QOFs employ diversified strategies across multiple asset classes to optimize risk-adjusted returns while maintaining regulatory compliance. The combination of real estate and operating businesses provides portfolio diversification and multiple value creation pathways.</p>
 </div>
