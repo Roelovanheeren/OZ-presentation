@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple PDF Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+        
+        .button:hover {
+            background: #0056b3;
+        }
+        
+        .button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #007bff;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .download-section a {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin: 10px;
+        }
+        
+        .download-section a:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Simple PDF Generator</h1>
+        <p>This generator will create a high-quality PDF of your Opportunity Zone presentation with all backgrounds and styling intact.</p>
+        
+        <button id="generateBtn" class="button" onclick="generatePDF()">Generate PDF</button>
+        
+        <div id="status" class="status"></div>
+        <div class="progress-bar">
+            <div id="progressBar" class="progress-fill"></div>
+        </div>
+        
+        <div id="downloadSection" class="download-section" style="display: none;">
+            <a href="#" id="downloadLink" download="OZ-Presentation.pdf">Download PDF</a>
+        </div>
+    </div>
+
+    <script>
+        const pages = [
+            'page-01-cover.html',
+            'page-02-toc.html',
+            'page-03-executive.html',
+            'page-04-what-are-oz.html',
+            'page-05-tax-advantage.html',
+            'page-06-compliance.html',
+            'page-07-investment-structures.html',
+            'page-08-real-estate.html',
+            'page-09-phoenix-market.html',
+            'page-10-hazen-road.html',
+            'page-11-risk-management.html',
+            'page-12-exit-strategy.html',
+            'page-13-legal-regulatory.html',
+            'page-14-eligibility.html',
+            'page-15-reporting.html',
+            'page-16-community-impact.html'
+        ];
+
+        async function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const status = document.getElementById('status');
+            const progressBar = document.getElementById('progressBar');
+            const downloadLink = document.getElementById('downloadLink');
+            const downloadSection = document.getElementById('downloadSection');
+            const generateBtn = document.getElementById('generateBtn');
+            
+            // Disable button and show status
+            generateBtn.disabled = true;
+            status.style.display = 'block';
+            status.className = 'status info';
+            status.textContent = 'Starting PDF generation...';
+            
+            try {
+                // Create a hidden iframe to load the main presentation
+                const iframe = document.createElement('iframe');
+                iframe.style.position = 'absolute';
+                iframe.style.left = '-9999px';
+                iframe.style.top = '-9999px';
+                iframe.style.width = '140mm';
+                iframe.style.height = '198mm';
+                iframe.style.border = 'none';
+                iframe.src = 'index.html';
+                document.body.appendChild(iframe);
+                
+                // Wait for iframe to load
+                await new Promise(resolve => {
+                    iframe.onload = resolve;
+                });
+                
+                // Wait for fonts and images to load
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                
+                // Generate PDF pages
+                for (let i = 0; i < pages.length; i++) {
+                    status.textContent = `Generating page ${i + 1} of ${pages.length}: ${pages[i]}`;
+                    progressBar.style.width = `${(i / pages.length) * 100}%`;
+                    
+                    // Navigate to the specific page in the iframe
+                    if (iframe.contentWindow && iframe.contentWindow.showPage) {
+                        iframe.contentWindow.showPage(i);
+                    }
+                    
+                    // Wait for page to load and render
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Capture the page frame from the iframe
+                    const pageFrame = iframe.contentDocument.querySelector('.page-frame');
+                    
+                    if (pageFrame) {
+                        const canvas = await html2canvas(pageFrame, {
+                            width: 529, // 140mm in pixels at 96 DPI
+                            height: 747, // 198mm in pixels at 96 DPI
+                            scale: 4, // Maximum quality scaling
+                            useCORS: true,
+                            allowTaint: true,
+                            backgroundColor: '#ffffff',
+                            logging: false,
+                            scrollX: 0,
+                            scrollY: 0,
+                            windowWidth: window.innerWidth,
+                            windowHeight: window.innerHeight,
+                            foreignObjectRendering: true
+                        });
+                        
+                        // Add to PDF
+                        if (i > 0) {
+                            pdf.addPage();
+                        }
+                        
+                        const imgData = canvas.toDataURL('image/png', 1.0); // No compression
+                        pdf.addImage(imgData, 'PNG', 0, 0, 210, 297, '', 'FAST');
+                    } else {
+                        console.warn(`Page frame not found for page ${i + 1}`);
+                    }
+                }
+                
+                // Clean up iframe
+                document.body.removeChild(iframe);
+                
+                // Complete
+                status.className = 'status success';
+                status.textContent = 'PDF generation completed successfully!';
+                progressBar.style.width = '100%';
+                
+                // Create download link
+                const pdfBlob = pdf.output('blob');
+                const url = URL.createObjectURL(pdfBlob);
+                downloadLink.href = url;
+                downloadSection.style.display = 'block';
+                
+            } catch (error) {
+                console.error('PDF generation error:', error);
+                status.className = 'status error';
+                status.textContent = `Error generating PDF: ${error.message}`;
+            } finally {
+                generateBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
