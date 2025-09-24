@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sophisticated Investor's Guide to Opportunity Zone Investing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('background.svg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .booklet-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            padding: 80px 60px 80px 60px;
+        }
+        
+        .page-frame {
+            width: 140mm;
+            height: 198mm;
+            background: url('Background + Logo 2.png') no-repeat center center;
+            background-size: cover;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .page-content {
+            width: 100%;
+            height: 100%;
+            padding: 25px 20px 60px 20px; /* Extra bottom padding for footer */
+            overflow-y: auto;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        /* Global font sizes */
+        .page-content h2 {
+            font-size: 24pt;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 15px;
+        }
+        
+        .page-content h3 {
+            font-size: 16pt;
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 10px;
+        }
+        
+        .page-content p {
+            font-size: 11pt;
+            font-family: 'Inter', sans-serif;
+            color: #000;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        /* Footer with logo */
+        .page-footer {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 30px;
+        }
+        
+        .page-footer img {
+            max-height: 30px;
+            width: auto;
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 25px;
+            gap: 15px;
+            z-index: 1000;
+        }
+        
+        .nav-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            background: #555;
+        }
+        
+        .nav-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .page-indicator {
+            color: white;
+            font-weight: bold;
+            margin: 0 10px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .booklet-container {
+                padding: 60px 20px 60px 20px;
+            }
+            
+            .page-frame {
+                width: 70vw;
+                height: calc(70vw * 1.414);
+                max-height: 70vh;
+            }
+            
+            .page-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="booklet-container">
+        <div class="page-frame">
+            <div class="page-content" id="pageContent">
+                <!-- Page content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="previousPage()">← Previous</button>
+        <div class="page-indicator" id="currentPage">1/22</div>
+        <button class="nav-btn" id="nextBtn" onclick="nextPage()">Next →</button>
+    </div>
+
+    <script>
+        let currentPageIndex = 0;
+        const totalPages = 28;
+        const pages = [
+            'page-01-cover.html',
+            'page-02-toc.html',
+            'page-03a-executive.html',
+            'page-03b-executive.html',
+            'page-04a-what-are-oz.html',
+            'page-04b-what-are-oz.html',
+            'page-05a-tax-advantage.html',
+            'page-05b-tax-advantage.html',
+            'page-06a-compliance.html',
+            'page-06b-compliance.html',
+            'page-07-investment-structures.html',
+            'page-08-real-estate.html',
+            'page-09a-phoenix-market.html',
+            'page-09b-phoenix-market.html',
+            'page-10a-hazen-road.html',
+            'page-10b-hazen-road.html',
+            'page-11-risk-management.html',
+            'page-12-exit-strategy.html',
+            'page-13-legal-regulatory.html',
+            'page-14-eligibility.html',
+            'page-15-reporting.html',
+            'page-16-community-impact.html',
+            'page-17-case-studies.html',
+            'page-18-comparative.html',
+            'page-19-investor-protections.html',
+            'page-20-timeline.html',
+            'page-21-action-plan.html',
+            'page-22-conclusion.html'
+        ];
+        
+        function loadPage(index) {
+            const pageContent = document.getElementById('pageContent');
+            const xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    pageContent.innerHTML = xhr.responseText;
+                } else if (xhr.readyState === 4 && xhr.status === 404) {
+                    pageContent.innerHTML = '<div style="padding: 50px; text-align: center;"><h2>Page not found</h2><p>Page ' + (index + 1) + ' is not available yet.</p></div>';
+                }
+            };
+            
+            xhr.open('GET', pages[index], true);
+            xhr.send();
+        }
+        
+        function showPage(index) {
+            if (index >= 0 && index < totalPages) {
+                currentPageIndex = index;
+                loadPage(index);
+                document.getElementById('currentPage').textContent = (index + 1) + '/' + totalPages;
+                
+                // Update navigation buttons
+                document.getElementById('prevBtn').disabled = index === 0;
+                document.getElementById('nextBtn').disabled = index === totalPages - 1;
+            }
+        }
+        
+        function nextPage() {
+            if (currentPageIndex < totalPages - 1) {
+                showPage(currentPageIndex + 1);
+            }
+        }
+        
+        function previousPage() {
+            if (currentPageIndex > 0) {
+                showPage(currentPageIndex - 1);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousPage();
+            }
+        });
+        
+        // Touch/swipe navigation
+        let startX = 0;
+        let endX = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+        });
+        
+        document.addEventListener('touchend', function(e) {
+            endX = e.changedTouches[0].clientX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const threshold = 50;
+            const diff = startX - endX;
+            
+            if (Math.abs(diff) > threshold) {
+                if (diff > 0) {
+                    nextPage();
+                } else {
+                    previousPage();
+                }
+            }
+        }
+        
+        // Initialize
+        showPage(0);
+    </script>
+</body>
+</html>
