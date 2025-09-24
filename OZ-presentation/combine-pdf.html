@@ -223,10 +223,16 @@
                     const canvas = await html2canvas(pageContainer, {
                         width: 529, // 140mm in pixels at 96 DPI
                         height: 747, // 198mm in pixels at 96 DPI
-                        scale: 2, // Higher resolution
+                        scale: 4, // Maximum quality resolution
                         useCORS: true,
                         allowTaint: true,
-                        backgroundColor: '#ffffff'
+                        backgroundColor: '#ffffff',
+                        logging: false,
+                        scrollX: 0,
+                        scrollY: 0,
+                        windowWidth: window.innerWidth,
+                        windowHeight: window.innerHeight,
+                        foreignObjectRendering: true
                     });
                     
                     // Add page to PDF (except for the first page)
@@ -239,8 +245,8 @@
                     const imgHeight = (canvas.height * imgWidth) / canvas.width;
                     
                     // Add the canvas image to the PDF
-                    const imgData = canvas.toDataURL('image/png');
-                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+                    const imgData = canvas.toDataURL('image/png', 1.0); // No compression
+                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight, '', 'FAST');
                     
                     // Remove the temporary container
                     document.body.removeChild(pageContainer);
