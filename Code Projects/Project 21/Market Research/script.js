@@ -65,3 +65,4 @@ document.getElementById('research-form').addEventListener('submit', async functi
         submitBtn.disabled = false;
     }
 });
+// Force redeploy Sun Sep 28 22:33:48 WITA 2025
