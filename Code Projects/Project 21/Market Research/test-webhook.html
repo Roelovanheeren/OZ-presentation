@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Webhook Test</title>
+</head>
+<body>
+    <h1>Webhook Test</h1>
+    <button onclick="testWebhook()">Test Webhook</button>
+    <div id="result"></div>
+
+    <script>
+        async function testWebhook() {
+            const webhookURL = 'https://api-f1db6c.stack.tryrelevance.com/latest/agents/hooks/custom-trigger/231d3908-fd4e-4835-8cc5-5a8fc4fcb449/b7b4bf17-2e14-4fa6-833b-7123e37bb6e2';
+            
+            const testData = {
+                name: "Test User",
+                email: "test@example.com",
+                company: "Test Company",
+                target_markets: "AZ",
+                investment_focus: "BTR",
+                key_priorities: "Market Analysis"
+            };
+            
+            try {
+                const response = await fetch(webhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                document.getElementById('result').innerHTML = `
+                    <p>Status: ${response.status}</p>
+                    <p>Response: ${await response.text()}</p>
+                `;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
