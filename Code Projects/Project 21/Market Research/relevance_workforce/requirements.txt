@@ -1,0 +1,4 @@
+python-dotenv>=1.0.1
+relevanceai>=10.1.0
+requests>=2.32.3
+beautifulsoup4>=4.12.3
