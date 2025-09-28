@@ -29,7 +29,7 @@ document.getElementById('research-form').addEventListener('submit', async functi
     console.log('Form data being sent:', data);
     
     try {
-        // Your Relevance webhook URL
+        // Your Relevance webhook URL - UPDATED
         const webhookURL = 'https://api-f1db6c.stack.tryrelevance.com/latest/agents/hooks/custom-trigger/231d3908-fd4e-4835-8cc5-5a8fc4fcb449/b7b4bf17-2e14-4fa6-833b-7123e37bb6e2';
         
         const response = await fetch(webhookURL, {
@@ -65,4 +65,3 @@ document.getElementById('research-form').addEventListener('submit', async functi
         submitBtn.disabled = false;
     }
 });
-// Force redeploy Sun Sep 28 22:33:48 WITA 2025
