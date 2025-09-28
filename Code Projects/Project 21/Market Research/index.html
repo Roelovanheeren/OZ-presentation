@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Real Estate Market Research Report</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Get Your Free Real Estate Market Research Report</h1>
+            <p>Comprehensive real estate market analysis tailored to your investment criteria. Delivered in 20 minutes.</p>
+        </header>
+
+        <form id="research-form" method="POST">
+            <!-- Basic Information -->
+            <div class="form-section">
+                <h3>Contact Information</h3>
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="company">Company/Fund Name *</label>
+                    <input type="text" id="company" name="company" required>
+                </div>
+                <div class="form-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" name="title">
+                </div>
+            </div>
+
+            <!-- Target Market -->
+            <div class="form-section">
+                <h3>Target Markets</h3>
+                <div class="form-group">
+                    <label for="target_states">Primary States of Interest *</label>
+                    <select id="target_states" name="target_states" required>
+                        <option value="">Select Primary State</option>
+                        <option value="alabama">Alabama</option>
+                        <option value="alaska">Alaska</option>
+                        <option value="arizona">Arizona</option>
+                        <option value="arkansas">Arkansas</option>
+                        <option value="california">California</option>
+                        <option value="colorado">Colorado</option>
+                        <option value="connecticut">Connecticut</option>
+                        <option value="delaware">Delaware</option>
+                        <option value="florida">Florida</option>
+                        <option value="georgia">Georgia</option>
+                        <option value="hawaii">Hawaii</option>
+                        <option value="idaho">Idaho</option>
+                        <option value="illinois">Illinois</option>
+                        <option value="indiana">Indiana</option>
+                        <option value="iowa">Iowa</option>
+                        <option value="kansas">Kansas</option>
+                        <option value="kentucky">Kentucky</option>
+                        <option value="louisiana">Louisiana</option>
+                        <option value="maine">Maine</option>
+                        <option value="maryland">Maryland</option>
+                        <option value="massachusetts">Massachusetts</option>
+                        <option value="michigan">Michigan</option>
+                        <option value="minnesota">Minnesota</option>
+                        <option value="mississippi">Mississippi</option>
+                        <option value="missouri">Missouri</option>
+                        <option value="montana">Montana</option>
+                        <option value="nebraska">Nebraska</option>
+                        <option value="nevada">Nevada</option>
+                        <option value="new_hampshire">New Hampshire</option>
+                        <option value="new_jersey">New Jersey</option>
+                        <option value="new_mexico">New Mexico</option>
+                        <option value="new_york">New York</option>
+                        <option value="north_carolina">North Carolina</option>
+                        <option value="north_dakota">North Dakota</option>
+                        <option value="ohio">Ohio</option>
+                        <option value="oklahoma">Oklahoma</option>
+                        <option value="oregon">Oregon</option>
+                        <option value="pennsylvania">Pennsylvania</option>
+                        <option value="rhode_island">Rhode Island</option>
+                        <option value="south_carolina">South Carolina</option>
+                        <option value="south_dakota">South Dakota</option>
+                        <option value="tennessee">Tennessee</option>
+                        <option value="texas">Texas</option>
+                        <option value="utah">Utah</option>
+                        <option value="vermont">Vermont</option>
+                        <option value="virginia">Virginia</option>
+                        <option value="washington">Washington</option>
+                        <option value="west_virginia">West Virginia</option>
+                        <option value="wisconsin">Wisconsin</option>
+                        <option value="wyoming">Wyoming</option>
+                        <option value="multiple">Multiple States</option>
+                        <option value="national">National</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="secondary_markets">Secondary Markets</label>
+                    <input type="text" id="secondary_markets" name="secondary_markets" placeholder="Other states or regions of interest">
+                </div>
+            </div>
+
+            <!-- Investment Focus -->
+            <div class="form-section">
+                <h3>Investment Focus</h3>
+                <div class="form-group">
+                    <label for="real_estate_type">Real Estate Asset Type *</label>
+                    <select id="real_estate_type" name="real_estate_type" required>
+                        <option value="">Select Asset Type</option>
+                        <option value="btr">Build-to-Rent (BTR)</option>
+                        <option value="multifamily">Multifamily/Apartments</option>
+                        <option value="single_family">Single Family Homes</option>
+                        <option value="condominiums">Condominiums</option>
+                        <option value="mixed_use">Mixed-Use Developments</option>
+                        <option value="commercial">Commercial Real Estate</option>
+                        <option value="retail">Retail Developments</option>
+                        <option value="industrial">Industrial/Warehouse</option>
+                        <option value="office">Office Buildings</option>
+                        <option value="senior_living">Senior Living</option>
+                        <option value="student_housing">Student Housing</option>
+                        <option value="hospitality">Hospitality/Hotels</option>
+                        <option value="land_development">Land Development</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="development_stage">Development Stage Preference *</label>
+                    <select id="development_stage" name="development_stage" required>
+                        <option value="">Select Stage</option>
+                        <option value="land_acquisition">Land Acquisition</option>
+                        <option value="pre_development">Pre-Development</option>
+                        <option value="construction">Under Construction</option>
+                        <option value="stabilized">Stabilized Properties</option>
+                        <option value="value_add">Value-Add Opportunities</option>
+                        <option value="ground_up">Ground-Up Development</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="investment_size">Typical Investment Size</label>
+                    <select id="investment_size" name="investment_size">
+                        <option value="">Select Range</option>
+                        <option value="under_1m">Under $1M</option>
+                        <option value="1m_5m">$1M - $5M</option>
+                        <option value="5m_15m">$5M - $15M</option>
+                        <option value="15m_50m">$15M - $50M</option>
+                        <option value="50m_100m">$50M - $100M</option>
+                        <option value="100m_plus">$100M+</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="market_focus">Market Type Focus</label>
+                    <select id="market_focus" name="market_focus">
+                        <option value="all">All Markets</option>
+                        <option value="primary">Primary Markets</option>
+                        <option value="secondary">Secondary Markets</option>
+                        <option value="tertiary">Tertiary Markets</option>
+                        <option value="emerging">Emerging Markets</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Research Preferences -->
+            <div class="form-section">
+                <h3>Research Preferences</h3>
+                <div class="form-group">
+                    <label for="investment_thesis">Investment Strategy/Focus Areas</label>
+                    <textarea id="investment_thesis" name="investment_thesis" rows="3" placeholder="Describe your real estate investment strategy and focus areas..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Research Priorities (select all that apply)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="key_priorities" value="market_demographics"> Market Demographics</label>
+                        <label><input type="checkbox" name="key_priorities" value="supply_demand"> Supply & Demand Analysis</label>
+                        <label><input type="checkbox" name="key_priorities" value="pricing_trends"> Pricing & Rent Trends</label>
+                        <label><input type="checkbox" name="key_priorities" value="development_pipeline"> Development Pipeline</label>
+                        <label><input type="checkbox" name="key_priorities" value="regulatory_environment"> Zoning & Regulations</label>
+                        <label><input type="checkbox" name="key_priorities" value="economic_indicators"> Economic Indicators</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="developments_tracking">Other Real Estate Developments You're Watching (Optional)</label>
+                    <input type="text" id="developments_tracking" name="developments_tracking" placeholder="Development names or developer companies, separated by commas">
+                </div>
+                <div class="form-group">
+                    <label for="deal_breakers">Investment Deal Breakers</label>
+                    <textarea id="deal_breakers" name="deal_breakers" rows="2" placeholder="What factors would make you avoid investing in a market or development?"></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Get My Free Market Research Report</button>
+            <p class="disclaimer">Your comprehensive real estate market analysis will be delivered to your email within 20 minutes. We respect your privacy and won't spam you.</p>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
