@@ -1,0 +1,3 @@
+Version: 1.0.1
+Last Updated: 2024-09-28
+Webhook URL: https://api-f1db6c.stack.tryrelevance.com/latest/agents/hooks/custom-trigger/231d3908-fd4e-4835-8cc5-5a8fc4fcb449/b7b4bf17-2e14-4fa6-833b-7123e37bb6e2
